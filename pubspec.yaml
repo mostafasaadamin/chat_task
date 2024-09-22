@@ -40,6 +40,8 @@ dependencies:
   flutter_bloc:
   equatable:
   firebase_core:
+  firebase_storage:
+  cloud_firestore:
 dev_dependencies:
   flutter_test:
     sdk: flutter

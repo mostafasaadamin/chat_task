@@ -50,7 +50,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
             ),
             SizedBox(height: 20),
-            _SignUpForm()
+            _SignUpForm(_image)
           ],
         ),
       ),
@@ -62,6 +62,8 @@ class _SignupScreenState extends State<SignupScreen> {
 class _SignUpForm extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  File? image;
+  _SignUpForm(this.image);
 
   @override
   Widget build(BuildContext context) {
@@ -92,9 +94,11 @@ class _SignUpForm extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
+              if(image==null) return;
               context.read<SignUpBloc>().add(SignUpSubmitted(
                 _emailController.text,
                 _passwordController.text,
+                  image
               ));
             },
             child: Text('Sign Up'),

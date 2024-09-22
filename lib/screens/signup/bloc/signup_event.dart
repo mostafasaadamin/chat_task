@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 
 abstract class SignUpEvent extends Equatable {
@@ -28,8 +30,8 @@ class SignUpPasswordChanged extends SignUpEvent {
 class SignUpSubmitted extends SignUpEvent {
   final String email;
   final String password;
-
-  const SignUpSubmitted(this.email, this.password);
+  final File? image;
+  const SignUpSubmitted(this.email, this.password, this.image);
 
   @override
   List<Object> get props => [email, password];

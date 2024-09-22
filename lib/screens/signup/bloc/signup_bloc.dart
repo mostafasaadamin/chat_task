@@ -16,6 +16,12 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     emit(SignUpLoading());
     try {
       await authRepository.signUp(email: event.email, password: event.password);
+      var user= await authRepository.logInWithEmailAndPassword(event.email, event.password);
+      if(user==null){
+         emit(SignUpFailure(error: "Email already exists"));
+         return;
+      }
+      await authRepository.uploadProfileImage(event.image!,user.uid.toString(),event.email,event.email.split("@")[0]);
       emit(SignUpSuccess());
     } catch (e) {
       emit(SignUpFailure(error: e.toString()));
