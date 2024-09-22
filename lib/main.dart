@@ -1,6 +1,7 @@
 import 'package:chat/screens/chat/chat_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,7 +15,7 @@ void main() async{
 class ChatApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Chat UI',
       theme: ThemeData.light(), // Light theme
       darkTheme: ThemeData.dark(), // Dark theme

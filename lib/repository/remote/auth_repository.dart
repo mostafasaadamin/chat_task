@@ -10,7 +10,6 @@ class AuthRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 
-
   Future<void> signUp({required String email, required String password}) async {
     await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
   }
