@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'bloc/signup_bloc.dart';
+import 'bloc/signup_event.dart';
+import 'bloc/signup_state.dart';
 class SignupScreen extends StatefulWidget {
   @override
   _SignupScreenState createState() => _SignupScreenState();
@@ -46,40 +50,64 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
             ),
             SizedBox(height: 20),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              obscureText: true,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Add signup logic here
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent,
-                padding: EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Text('Signup'),
-            ),
+            _SignUpForm()
           ],
         ),
+      ),
+    );
+  }
+}
+
+
+class _SignUpForm extends StatelessWidget {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<SignUpBloc, SignUpState>(
+      listener: (context, state) {
+        if (state is SignUpSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Sign up successful!')));
+        } else if (state is SignUpFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error)));
+        }
+      },
+      child: Column(
+        children: [
+          TextField(
+            controller: _emailController,
+            decoration: InputDecoration(labelText: 'Email'),
+            onChanged: (value) {
+              context.read<SignUpBloc>().add(SignUpEmailChanged(value));
+            },
+          ),
+          TextField(
+            controller: _passwordController,
+            decoration: InputDecoration(labelText: 'Password'),
+            obscureText: true,
+            onChanged: (value) {
+              context.read<SignUpBloc>().add(SignUpPasswordChanged(value));
+            },
+          ),
+          ElevatedButton(
+            onPressed: () {
+              context.read<SignUpBloc>().add(SignUpSubmitted(
+                _emailController.text,
+                _passwordController.text,
+              ));
+            },
+            child: Text('Sign Up'),
+          ),
+          BlocBuilder<SignUpBloc, SignUpState>(
+            builder: (context, state) {
+              if (state is SignUpLoading) {
+                return CircularProgressIndicator();
+              }
+              return Container();
+            },
+          ),
+        ],
       ),
     );
   }
