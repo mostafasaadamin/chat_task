@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "999349231429",
+    "firebase_url": "https://chaat-39bab.firebaseio.com",
+    "project_id": "chaat-39bab",
+    "storage_bucket": "chaat-39bab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999349231429:android:c561e665d76e139671a82c",
+        "android_client_info": {
+          "package_name": "com.educaly.eg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "999349231429-p777clpj9c1433rb411nno37t4tkapce.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARNjui6ii48ygRw1oKTMW_txGCyNtWFQM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "999349231429-p777clpj9c1433rb411nno37t4tkapce.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
