@@ -45,6 +45,7 @@ dependencies:
   get:
   cached_network_image:
   intl:
+  shared_preferences:
 dev_dependencies:
   flutter_test:
     sdk: flutter

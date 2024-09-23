@@ -4,6 +4,7 @@ import 'package:chat/screens/login/bloc/login_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
+import '../../../helper/shared_prefes.dart';
 import '../../chat/chat_screen.dart';
 import '../../users/users_screen.dart';
 
@@ -23,6 +24,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         event.password,
       );
       if (user != null) {
+        await Preference.instance.saveData("logged", true);
         Get.offAll(UsersListScreen());
       } else {
         emit(LoginFailure("Unknown error occurred"));

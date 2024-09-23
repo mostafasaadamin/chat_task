@@ -58,7 +58,7 @@ class AuthRepository {
         uuid: doc['uuid'],
         imageUrl: doc['imageUrl'],
         isOnline: doc['isOnline'],
-        lastOnline: doc['lastOnlineStatus'].toLastOnlineMessage(),
+        lastOnline: (doc['lastOnlineStatus'].toLastOnlineMessage()),
       );
     }).toList();
 
