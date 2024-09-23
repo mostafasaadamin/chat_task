@@ -4,9 +4,12 @@ import 'package:chat/screens/chat/bloc/chars_state.dart';
 import 'package:chat/screens/users/bloc/users_list_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jumping_dot/jumping_dot.dart';
 
+import '../../const/const_strings.dart';
 import '../../repository/remote/auth_repository.dart';
 import '../../repository/remote/chat_repository.dart';
+import '../../utils/colors.dart';
 
 class ChatScreen extends StatelessWidget {
   String userId;
@@ -107,7 +110,20 @@ class _ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
+    return  !isOutgoing&&typingMessageCode==message?
+    Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        JumpingDots(
+          color: primaryColor!,
+          radius: 8,
+          numberOfDots: 3,
+          animationDuration : Duration(milliseconds: 200),
+        ),
+      ],
+    ):
+    typingMessageCode!=message?
+     Align(
       alignment: isOutgoing ? Alignment.centerRight : Alignment.centerLeft,
       child: Column(
         crossAxisAlignment:
@@ -134,11 +150,35 @@ class _ChatBubble extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ):SizedBox.shrink();
   }
 }
-class ChatInput extends StatelessWidget {
-  TextEditingController _textEditingController=TextEditingController();
+class ChatInput extends StatefulWidget {
+  @override
+  State<ChatInput> createState() => _ChatInputState();
+}
+
+class _ChatInputState extends State<ChatInput> {
+  final FocusNode _focusNode = FocusNode();
+  final TextEditingController _textEditingController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        context.read<ChatsBloc>().add(TypingEvent(typingMessageCode));
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    _textEditingController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -152,10 +192,8 @@ class ChatInput extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: TextField(
-                onChanged: (message){
-                  context.read<ChatsBloc>().add(TypingEvent());
-                },
+              child: TextFormField(
+                focusNode:_focusNode ,
                 controller: _textEditingController,
                 decoration: InputDecoration(
                   hintText: 'Message...',
@@ -174,6 +212,7 @@ class ChatInput extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.send, color: Theme.of(context).primaryColor),
               onPressed: () {
+                _focusNode.unfocus();
                 context.read<ChatsBloc>().add(SendChatEvent(_textEditingController.text,));
               },
             ),

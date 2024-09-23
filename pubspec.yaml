@@ -46,6 +46,7 @@ dependencies:
   cached_network_image:
   intl:
   shared_preferences:
+  jumping_dot:
 dev_dependencies:
   flutter_test:
     sdk: flutter

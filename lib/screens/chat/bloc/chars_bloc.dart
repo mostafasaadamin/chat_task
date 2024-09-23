@@ -3,6 +3,7 @@ import 'package:chat/screens/chat/bloc/chars_event.dart';
 import 'package:chat/screens/chat/bloc/chars_state.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../../const/const_strings.dart';
 import '../../../repository/remote/chat_repository.dart';
 
 class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
@@ -14,6 +15,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
     on<ChatsLoadingEvent>(_loadChattingAsync);
     on<SendChatEvent>(_sendChattingAsync);
     on<TypingEvent>(_typingEvent);
+    on<DeleteTypingEvent>(_deleteTypingEvent);
   }
 
   Future<void> _loadChattingAsync(
@@ -39,7 +41,9 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
       SendChatEvent event, Emitter<ChatsState> emit) async {
     emit(SendingMessageLoading());
     try {
-          await chatRepository.sendChatMessage(
+     add(DeleteTypingEvent(typingMessageCode));
+
+    await chatRepository.sendChatMessage(
        userTargetId: userTargetId,
         userUuid: userId,
         userName: userName,
@@ -52,13 +56,25 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
   }
   void _typingEvent(
       TypingEvent event, Emitter<ChatsState> emit) async {
-    emit(SendingMessageLoading());
     try {
           await chatRepository.sendTypingMessage(
           userTargetId: userTargetId,
+        typingMessageCode: event.typingMessageCode,
         userUuid: userId,
       );
-      emit(MessageSent());
+    } catch (e) {
+      emit(MessageSentFailed(e.toString()));
+    }
+  }
+
+  Future<void> _deleteTypingEvent(
+      DeleteTypingEvent event, Emitter<ChatsState> emit) async {
+    try {
+          await chatRepository.deleteTypingMessage(
+          userTargetId: userTargetId,
+        typingMessageCode: event.typingMessageCode,
+        userUuid: userId,
+      );
     } catch (e) {
       emit(MessageSentFailed(e.toString()));
     }
