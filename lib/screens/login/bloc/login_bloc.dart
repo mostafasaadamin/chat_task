@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
 import '../../chat/chat_screen.dart';
+import '../../users/users_screen.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final AuthRepository authenticationRepository;
@@ -22,8 +23,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         event.password,
       );
       if (user != null) {
-        Get.offAll(ChatScreen());
-
+        Get.offAll(UsersListScreen());
       } else {
         emit(LoginFailure("Unknown error occurred"));
       }

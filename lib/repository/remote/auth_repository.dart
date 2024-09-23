@@ -50,7 +50,7 @@ class AuthRepository {
   }
 
   Future<List<UserInfoModel>> loadAllUsersGroup() async {
-    QuerySnapshot snapshot = await _firestore.collection('userInfo').get();
+    var snapshot = await _firestore.collection('userInfo').get();
     List<UserInfoModel> users = snapshot.docs.map((doc) {
       return UserInfoModel(
         name: doc['name'],
@@ -58,7 +58,7 @@ class AuthRepository {
         uuid: doc['uuid'],
         imageUrl: doc['imageUrl'],
         isOnline: doc['isOnline'],
-        lastOnline: doc['lastOnlineStatus'],
+        lastOnline: doc['lastOnlineStatus'].toLastOnlineMessage(),
       );
     }).toList();
 

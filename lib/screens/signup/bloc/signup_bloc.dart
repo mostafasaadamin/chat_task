@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:chat/screens/chat/chat_screen.dart';
+import 'package:chat/screens/users/users_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import '../../../repository/remote/auth_repository.dart';
@@ -24,7 +25,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
          return;
       }
       await authRepository.uploadProfileImage(event.image!,user.uid.toString(),event.email,event.email.split("@")[0]);
-      Get.offAll(ChatScreen());
+      Get.offAll(UsersListScreen());
     } catch (e) {
       emit(SignUpFailure(error: e.toString()));
     }

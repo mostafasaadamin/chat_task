@@ -1,4 +1,5 @@
 import 'package:chat/repository/remote/auth_repository.dart';
+import 'package:chat/screens/users/bloc/users_list_event.dart';
 import 'package:chat/screens/users/bloc/users_list_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,13 +17,25 @@ class UsersListScreen extends StatelessWidget {
       ),
       body: BlocProvider(
         create: (context) => UsersBloc(authRepository:AuthRepository()),
-        child: UsersList(),
+        child: _UsersList(),
       ),
     );
   }
 }
 
-class UsersList extends StatelessWidget {
+class _UsersList extends StatefulWidget {
+  @override
+  State<_UsersList> createState() => _UsersListState();
+}
+
+class _UsersListState extends State<_UsersList> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<UsersBloc>().add(LoadUsersEvent());
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UsersBloc, UsersState>(
