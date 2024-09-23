@@ -4,7 +4,7 @@ class UserInfoModel {
   final bool isOnline;
   final String email;
   final String uuid;
-  final String lastOnline;
+  final int lastOnline;
 
   UserInfoModel({required this.name,
     required  this.imageUrl,
