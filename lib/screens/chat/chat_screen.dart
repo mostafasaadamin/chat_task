@@ -213,7 +213,8 @@ class _ChatInputState extends State<ChatInput> {
               icon: Icon(Icons.send, color: Theme.of(context).primaryColor),
               onPressed: () {
                 _focusNode.unfocus();
-                context.read<ChatsBloc>().add(SendChatEvent(_textEditingController.text,));
+                if(_textEditingController.text.isEmpty) return;
+                context.read<ChatsBloc>().add(SendChatEvent(_textEditingController.text.trim(),));
               },
             ),
           ],
