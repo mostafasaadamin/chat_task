@@ -2,13 +2,13 @@ import 'package:chat/extentions/time_extension.dart';
 import 'package:chat/helper/shared_prefes.dart';
 import 'package:chat/main.dart';
 import 'package:chat/repository/remote/auth_repository.dart';
+import 'package:chat/repository/remote/chat_repository.dart';
 import 'package:chat/screens/chat/chat_screen.dart';
 import 'package:chat/screens/users/bloc/users_list_event.dart';
 import 'package:chat/screens/users/bloc/users_list_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
 import 'bloc/users_list_bloc.dart';
@@ -21,7 +21,9 @@ class UsersListScreen extends StatelessWidget {
         title: Text('Users List'),
       ),
       body: BlocProvider(
-        create: (context) => UsersBloc(authRepository:AuthRepository()),
+        create: (context) => UsersBloc(
+            authRepository:AuthRepository(),
+            chatRepository: ChatRepository()),
         child: _UsersList(),
       ),
     );
@@ -38,6 +40,7 @@ class _UsersListState extends State<_UsersList> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       context.read<UsersBloc>().add(LoadUsersEvent());
+      context.read<UsersBloc>().add(SetUserAsOnlineEvent());
     });
     super.initState();
   }

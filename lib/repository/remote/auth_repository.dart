@@ -57,7 +57,7 @@ class AuthRepository {
         email: doc['email'],
         uuid: doc['uuid'],
         imageUrl: doc['imageUrl'],
-        isOnline: doc['isOnline'],
+        isOnline: doc['onlineStatus'],
         lastOnline: (doc['lastOnlineStatus']),
       );
     }).toList();
