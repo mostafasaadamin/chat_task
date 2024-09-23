@@ -17,4 +17,21 @@ class ChatRepository {
     }
 
   }
+
+  Future<void> sendChatMessage({required String userUuid,required  String userTargetId,required  String message}) async {
+    String chatKey = '${userUuid}_$userTargetId';
+
+    CollectionReference messages = FirebaseFirestore.instance.collection('chatMessages');
+
+    try {
+      await messages.doc(chatKey).collection('messages').add({
+        'senderId': userUuid,
+        'receiverId': userTargetId,
+        'message': message,
+        'timestamp': FieldValue.serverTimestamp(), // Add timestamp for ordering
+      });
+    } catch (e) {
+      print("Error sending message: $e");
+    }
+  }
 }

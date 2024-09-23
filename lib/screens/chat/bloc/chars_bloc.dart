@@ -5,11 +5,13 @@ import 'package:equatable/equatable.dart';
 
 import '../../../repository/remote/chat_repository.dart';
 
-class CharsBloc extends Bloc<ChatsEvent, ChatsState> {
+class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
   final ChatRepository chatRepository;
-
-  CharsBloc({required this.chatRepository}) : super(ChatsInitial()) {
+  final String userId;
+  final String userTargetId;
+  ChatsBloc({required this.chatRepository,required this.userId,required this.userTargetId}) : super(ChatsInitial()) {
     on<ChatsLoadingEvent>(_loadChattingAsync);
+    on<SendChatEvent>(_sendChattingAsync);
   }
 
   void _loadChattingAsync(
@@ -23,6 +25,21 @@ class CharsBloc extends Bloc<ChatsEvent, ChatsState> {
 
     } catch (e) {
       emit(ChatsFailure(e.toString()));
+    }
+  }
+
+  void _sendChattingAsync(
+      SendChatEvent event, Emitter<ChatsState> emit) async {
+    emit(SendingMessageLoading());
+    try {
+          await chatRepository.sendChatMessage(
+       userTargetId: userTargetId,
+        userUuid: userId,
+        message: event.message
+      );
+      emit(MessageSent());
+    } catch (e) {
+      emit(MessageSentFailed(e.toString()));
     }
   }
 }

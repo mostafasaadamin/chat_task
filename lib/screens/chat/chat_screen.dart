@@ -1,4 +1,11 @@
+import 'package:chat/screens/chat/bloc/chars_bloc.dart';
+import 'package:chat/screens/chat/bloc/chars_event.dart';
+import 'package:chat/screens/users/bloc/users_list_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../repository/remote/auth_repository.dart';
+import '../../repository/remote/chat_repository.dart';
 
 class ChatScreen extends StatelessWidget {
   String userId;
@@ -8,16 +15,42 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Chat'),
+    return BlocProvider(
+      create: (context) => ChatsBloc(chatRepository: ChatRepository(),userId: userId,userTargetId: chatUserId),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Chat'),
+        ),
+        body: _Body(),
       ),
-      body: Column(
-        children: [
-          Expanded(child: _ChatBody()), // The list of messages
-          ChatInput(), // The input field
-        ],
-      ),
+    );
+  }
+}
+
+class _Body extends StatefulWidget {
+  const _Body({
+    super.key,
+  });
+
+  @override
+  State<_Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<_Body> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<ChatsBloc>().add(ChatsLoadingEvent());
+    });
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(child: _ChatBody()), // The list of messages
+        ChatInput(), // The input field
+      ],
     );
   }
 }
@@ -90,6 +123,7 @@ class _ChatBubble extends StatelessWidget {
   }
 }
 class ChatInput extends StatelessWidget {
+  TextEditingController _textEditingController=TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -98,6 +132,7 @@ class ChatInput extends StatelessWidget {
         children: [
           Expanded(
             child: TextField(
+              controller: _textEditingController,
               decoration: InputDecoration(
                 hintText: 'Message...',
                 filled: true,
@@ -115,7 +150,7 @@ class ChatInput extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.send, color: Theme.of(context).primaryColor),
             onPressed: () {
-              // Send message logic
+             context.read<ChatsBloc>().add(SendChatEvent(_textEditingController.text,));
             },
           ),
         ],
