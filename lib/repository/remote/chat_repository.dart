@@ -24,9 +24,11 @@ class ChatRepository {
 
   Future<CollectionReference<Map<String, dynamic>>> loadAllChats(
       {required String userUuid, required String userTargetId}) async{
-    final chatKey = userTargetId;
+    final chatKey = [userUuid, userTargetId]..sort();
+    final uniqueChatKey = '${chatKey[0]}_${chatKey[1]}';
+
     final messagesRef = _fireStore.collection('chatMessages')
-        .doc(chatKey)
+        .doc(uniqueChatKey)
         .collection('messages');
     return messagesRef;
   }
@@ -34,13 +36,14 @@ class ChatRepository {
 
   Future<void> sendChatMessage(
       {required String userUuid, required String userTargetId, required String message, required String userName}) async {
-    String chatKey = userTargetId;
+    final chatKey = [userUuid, userTargetId]..sort();
+    final uniqueChatKey = '${chatKey[0]}_${chatKey[1]}';
 
     CollectionReference messages = FirebaseFirestore.instance.collection(
         'chatMessages');
 
     try {
-      await messages.doc(chatKey).collection('messages').add({
+      await messages.doc(uniqueChatKey).collection('messages').add({
         'senderId': userUuid,
         'receiverId': userTargetId,
         'message': message,
