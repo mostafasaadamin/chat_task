@@ -1,5 +1,5 @@
-part of 'chars_bloc.dart';
+abstract class ChatsEvent {}
 
-sealed class CharsEvent extends Equatable {
-  const CharsEvent();
-}
+class ChatsLoadingEvent extends ChatsEvent {}
+class SendChatEvent extends ChatsEvent {}
+class TypingEvent extends ChatsEvent {}

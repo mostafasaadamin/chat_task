@@ -1,10 +1,13 @@
-part of 'chars_bloc.dart';
+abstract class ChatsState {}
 
-sealed class CharsState extends Equatable {
-  const CharsState();
-}
+class ChatsInitial extends ChatsState {}
 
-final class CharsInitial extends CharsState {
-  @override
-  List<Object> get props => [];
+class ChatsLoading extends ChatsState {}
+
+class ChatsLoaded extends ChatsState {}
+
+class ChatsFailure extends ChatsState {
+  final String error;
+
+  ChatsFailure(this.error);
 }
