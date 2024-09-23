@@ -13,6 +13,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
   final AuthRepository authRepository;
   final ChatRepository chatRepository;
    String? userId;
+   String? userName;
   UsersBloc({required this.authRepository,required this.chatRepository}) : super(LoadUsersInitial()) {
     on<LoadUsersEvent>(_loadUsersGroupAsync);
     on<SetUserAsOnlineEvent>(_changeOnlineStatus);
@@ -48,5 +49,6 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
 
   void _initializeUserId() async {
       userId= await Preference.instance.getData("userId");
+      userName= await Preference.instance.getData("userName");
   }
 }

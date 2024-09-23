@@ -9,7 +9,8 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
   final ChatRepository chatRepository;
   final String userId;
   final String userTargetId;
-  ChatsBloc({required this.chatRepository,required this.userId,required this.userTargetId}) : super(ChatsInitial()) {
+  final String userName;
+  ChatsBloc({required this.chatRepository,required this.userId,required this.userName,required this.userTargetId}) : super(ChatsInitial()) {
     on<ChatsLoadingEvent>(_loadChattingAsync);
     on<SendChatEvent>(_sendChattingAsync);
   }
@@ -19,16 +20,14 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
     emit(ChatsLoading());
     try {
 
-      final chatsCollections =  chatRepository.loadAllChats(
+      final chatsCollections =  await chatRepository.loadAllChats(
       userUuid: userId,
         userTargetId: userTargetId
       );
 
-      chatsCollections.orderBy('timestamp', descending: true).snapshots().listen((snapshot) {
+      await for (final snapshot in chatsCollections.orderBy('timestamp', descending: true).snapshots()) {
         emit(ChatsLoaded(snapshot.docs));
-      }, onError: (error) {
-        emit(ChatsFailure('Error loading messages: $error'));
-      });
+      }
 
     } catch (e) {
       emit(ChatsFailure(e.toString()));
@@ -42,6 +41,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
           await chatRepository.sendChatMessage(
        userTargetId: userTargetId,
         userUuid: userId,
+        userName: userName,
         message: event.message,
       );
       emit(MessageSent());

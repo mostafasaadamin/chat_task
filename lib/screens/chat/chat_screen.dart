@@ -11,13 +11,14 @@ import '../../repository/remote/chat_repository.dart';
 class ChatScreen extends StatelessWidget {
   String userId;
   String chatUserId;
+  String userName;
 
-  ChatScreen({required this.userId,required  this.chatUserId});
+  ChatScreen({required this.userId,required  this.chatUserId,required  this.userName});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ChatsBloc(chatRepository: ChatRepository(),userId: userId,userTargetId: chatUserId),
+      create: (context) => ChatsBloc(chatRepository: ChatRepository(),userId: userId,userTargetId: chatUserId,userName: userName),
       child: Scaffold(
         appBar: AppBar(
           title: Text('Chat'),

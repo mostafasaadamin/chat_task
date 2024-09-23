@@ -76,7 +76,7 @@ class _UsersListState extends State<_UsersList> {
                 onTap: ()async{
                   final usersBloc = context.read<UsersBloc>();
 
-                  Get.to(ChatScreen(userId:usersBloc.userId.toString(), chatUserId: user.uuid));
+                  Get.to(ChatScreen(userId:usersBloc.userId.toString(), chatUserId: user.uuid,userName: usersBloc.userName??"",));
                 },
                 child: ListTile(
                   leading: Stack(

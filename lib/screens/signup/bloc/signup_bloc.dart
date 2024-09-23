@@ -28,6 +28,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       await authRepository.uploadProfileImage(event.image!,user.uid.toString(),event.email,event.email.split("@")[0]);
       await Preference.instance.saveData("logged", true);
       await Preference.instance.saveData("userId", user.uid);
+      await Preference.instance.saveData("userName", user.email?.split("@")[0]??"");
 
       Get.offAll(UsersListScreen());
     } catch (e) {
