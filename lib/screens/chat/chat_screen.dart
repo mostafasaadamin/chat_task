@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatelessWidget {
+  String userId;
+  String chatUserId;
+
+  ChatScreen({required this.userId,required  this.chatUserId});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

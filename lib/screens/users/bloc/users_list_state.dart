@@ -29,3 +29,12 @@ class UsersError extends UsersState {
   @override
   List<Object> get props => [message];
 }
+
+class ChangeOnlineStatusError extends UsersState {
+  final String message;
+
+  const ChangeOnlineStatusError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

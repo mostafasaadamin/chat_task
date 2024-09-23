@@ -25,6 +25,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       );
       if (user != null) {
         await Preference.instance.saveData("logged", true);
+        await Preference.instance.saveData("userId", user.uid);
         Get.offAll(UsersListScreen());
       } else {
         emit(LoginFailure("Unknown error occurred"));

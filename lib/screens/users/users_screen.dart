@@ -1,11 +1,15 @@
 import 'package:chat/extentions/time_extension.dart';
+import 'package:chat/helper/shared_prefes.dart';
+import 'package:chat/main.dart';
 import 'package:chat/repository/remote/auth_repository.dart';
+import 'package:chat/screens/chat/chat_screen.dart';
 import 'package:chat/screens/users/bloc/users_list_event.dart';
 import 'package:chat/screens/users/bloc/users_list_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 
 import 'bloc/users_list_bloc.dart';
 
@@ -48,37 +52,44 @@ class _UsersListState extends State<_UsersList> {
             itemCount: state.users.length,
             itemBuilder: (context, index) {
               final user = state.users[index];
-              return ListTile(
-                leading: Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
-                      child: CachedNetworkImage(
-                        imageUrl: user.imageUrl,
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
-                      ),
-                    ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          width: 12,
-                          height: 12,
-                          decoration: BoxDecoration(
-                            color:user.isOnline? Colors.green:Colors.grey,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2),
-                          ),
+              return GestureDetector(
+                onTap: ()async{
+                  final usersBloc = context.read<UsersBloc>();
+
+                  Get.to(ChatScreen(userId:usersBloc.userId.toString(), chatUserId: user.uuid));
+                },
+                child: ListTile(
+                  leading: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(30),
+                        child: CachedNetworkImage(
+                          imageUrl: user.imageUrl,
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => Icon(Icons.error),
                         ),
                       ),
-                  ],
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            width: 12,
+                            height: 12,
+                            decoration: BoxDecoration(
+                              color:user.isOnline? Colors.green:Colors.grey,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 2),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  title: Text(user.name, style: TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: Text(user.isOnline ? 'Online' : user.lastOnline.toLastOnlineMessage()),
                 ),
-                title: Text(user.name, style: TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: Text(user.isOnline ? 'Online' : user.lastOnline.toLastOnlineMessage()),
               );
             },
           );
