@@ -18,14 +18,7 @@ class SignUpEmailChanged extends SignUpEvent {
   List<Object> get props => [email];
 }
 
-class SignUpPasswordChanged extends SignUpEvent {
-  final String password;
 
-  const SignUpPasswordChanged(this.password);
-
-  @override
-  List<Object> get props => [password];
-}
 
 class SignUpSubmitted extends SignUpEvent {
   final String email;

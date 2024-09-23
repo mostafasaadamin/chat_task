@@ -2,6 +2,7 @@ import 'package:chat/screens/login/bloc/login_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../repository/remote/auth_repository.dart';
+import '../../utils/colors.dart';
 import '../signup/signup_screen.dart';
 import 'bloc/login_event.dart';
 import 'bloc/login_state.dart';
@@ -16,7 +17,7 @@ class LoginScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text('Authentication App'),
-          backgroundColor: Colors.redAccent,
+          backgroundColor: primaryColor,
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -35,7 +36,7 @@ class LoginScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.redAccent,
+                      color: primaryColor,
                     ),
                   ),
                   SizedBox(height: 20),
@@ -74,7 +75,7 @@ class LoginScreen extends StatelessWidget {
                               password: _passwordController.text));
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.redAccent,
+                      backgroundColor: primaryColor,
                       padding:const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
