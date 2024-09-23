@@ -41,6 +41,8 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
 
   void _logoutStatus(LogoutEvent event, Emitter<UsersState> emit) async {
     await authRepository.signOut();
+    await chatRepository.updateUserOnlineStatus(userId.toString(),false);
+    await Preference.instance.clearAll();
     Get.offAll(LoginScreen());
   }
 
