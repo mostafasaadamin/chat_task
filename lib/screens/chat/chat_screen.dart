@@ -78,7 +78,7 @@ class _ChatBody extends StatelessWidget {
                   return _ChatBubble(
                     message: messageData['message'],
                     isOutgoing: messageData['senderId']==context.read<ChatsBloc>().userId,
-                    senderName: messageData['senderName'],
+                    senderName: messageData['senderName']??"",
                     isDarkTheme: Theme
                         .of(context)
                         .brightness == Brightness.dark,
