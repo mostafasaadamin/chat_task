@@ -1,5 +1,6 @@
 import 'package:chat/screens/chat/chat_screen.dart';
 import 'package:chat/screens/login/login_screen.dart';
+import 'package:chat/screens/splash/splash_screen.dart';
 import 'package:chat/screens/users/users_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -22,12 +23,7 @@ class ChatApp extends StatefulWidget {
 }
 
 class _ChatAppState extends State<ChatApp> {
- bool isLogged=false;
-  @override
-  void initState() {
-       _isLoggedUser();
-    super.initState();
-  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -36,11 +32,9 @@ class _ChatAppState extends State<ChatApp> {
       theme: ThemeData.light(), // Light theme
       darkTheme: ThemeData.dark(), // Dark theme
       themeMode: ThemeMode.system, // Use system theme (or customize)
-      home:isLogged?UsersListScreen():LoginScreen(),
+      home:SplashScreen(),
     );
   }
 
-  void _isLoggedUser() async{
-    isLogged= await Preference.instance.getData("logged")??false;
-  }
+
 }
