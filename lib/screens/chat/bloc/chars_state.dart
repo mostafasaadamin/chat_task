@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 abstract class ChatsState {}
 
 class ChatsInitial extends ChatsState {}
@@ -11,7 +13,11 @@ class MessageSentFailed extends ChatsState {
   MessageSentFailed(this.error);
 }
 
-class ChatsLoaded extends ChatsState {}
+class ChatsLoaded extends ChatsState {
+  final List<QueryDocumentSnapshot> messages;
+
+  ChatsLoaded(this.messages);
+}
 
 
 class ChatsFailure extends ChatsState {

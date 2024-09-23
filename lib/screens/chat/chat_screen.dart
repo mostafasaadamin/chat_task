@@ -1,5 +1,6 @@
 import 'package:chat/screens/chat/bloc/chars_bloc.dart';
 import 'package:chat/screens/chat/bloc/chars_event.dart';
+import 'package:chat/screens/chat/bloc/chars_state.dart';
 import 'package:chat/screens/users/bloc/users_list_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,26 +59,35 @@ class _BodyState extends State<_Body> {
 class _ChatBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.all(8),
-      children: [
-        // Incoming message
-        _ChatBubble(
-          message: 'Holy hell! 🤯',
-          isOutgoing: false,
-          senderName: 'Tracy',
-          isDarkTheme: Theme.of(context).brightness == Brightness.dark,
-        ),
-        // Outgoing message
-        _ChatBubble(
-          message: 'What is that? Is that a script?',
-          isOutgoing: true,
-          senderName: 'You',
-          isDarkTheme: Theme.of(context).brightness == Brightness.dark,
-        ),
-        // More messages...
-      ],
-    );
+    return BlocBuilder<ChatsBloc, ChatsState>(
+        builder: (context, state) {
+          if (state is ChatsLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is ChatsFailure) {
+            return Center(child: Text(state.error));
+          } else if (state is ChatsLoaded) {
+            final messages = state.messages;
+            return
+              ListView.builder(
+                reverse: true,
+                itemCount: messages.length,
+                itemBuilder: (context, index) {
+                  final messageData = messages[index].data() as Map<String,
+                      dynamic>;
+                  return _ChatBubble(
+                    message: messageData['message'],
+                    isOutgoing: messageData['senderId']==context.read<ChatsBloc>().userId,
+                    senderName: messageData['senderName'],
+                    isDarkTheme: Theme
+                        .of(context)
+                        .brightness == Brightness.dark,
+                  );
+                },
+              );
+          }else {
+            return Container();
+          }
+        });
   }
 }
 class _ChatBubble extends StatelessWidget {
@@ -126,35 +136,48 @@ class ChatInput extends StatelessWidget {
   TextEditingController _textEditingController=TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: _textEditingController,
-              decoration: InputDecoration(
-                hintText: 'Message...',
-                filled: true,
-                fillColor: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.grey[800]
-                    : Colors.grey[200],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide.none,
+
+    return BlocBuilder<ChatsBloc, ChatsState>(
+        builder: (context, state) {
+      if (state is MessageSent) {
+       _textEditingController.clear();
+      }
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _textEditingController,
+                decoration: InputDecoration(
+                  hintText: 'Message...',
+                  filled: true,
+                  fillColor: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey[800]
+                      : Colors.grey[200],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(width: 8),
-          IconButton(
-            icon: Icon(Icons.send, color: Theme.of(context).primaryColor),
-            onPressed: () {
-             context.read<ChatsBloc>().add(SendChatEvent(_textEditingController.text,));
-            },
-          ),
-        ],
-      ),
+            SizedBox(width: 8),
+            IconButton(
+              icon: Icon(Icons.send, color: Theme.of(context).primaryColor),
+              onPressed: () {
+                context.read<ChatsBloc>().add(SendChatEvent(_textEditingController.text,));
+              },
+            ),
+          ],
+        ),
+      );
+      },
+
     );
+
+
+
+
   }
 }

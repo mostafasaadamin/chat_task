@@ -14,14 +14,21 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
     on<SendChatEvent>(_sendChattingAsync);
   }
 
-  void _loadChattingAsync(
+  Future<void> _loadChattingAsync(
       ChatsLoadingEvent event, Emitter<ChatsState> emit) async {
     emit(ChatsLoading());
     try {
-      // final user = await chatRepository.logInWithEmailAndPassword(
-      //   event.email,
-      //   event.password,
-      // );
+
+      final chatsCollections =  chatRepository.loadAllChats(
+      userUuid: userId,
+        userTargetId: userTargetId
+      );
+
+      chatsCollections.orderBy('timestamp', descending: true).snapshots().listen((snapshot) {
+        emit(ChatsLoaded(snapshot.docs));
+      }, onError: (error) {
+        emit(ChatsFailure('Error loading messages: $error'));
+      });
 
     } catch (e) {
       emit(ChatsFailure(e.toString()));
@@ -35,7 +42,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
           await chatRepository.sendChatMessage(
        userTargetId: userTargetId,
         userUuid: userId,
-        message: event.message
+        message: event.message,
       );
       emit(MessageSent());
     } catch (e) {
