@@ -75,12 +75,11 @@ class _ChatBody extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final messageData = messages[index].data() as Map<String,
                       dynamic>;
-                  print("messageData$messageData");
-                  print("userId${context.read<ChatsBloc>().userId}");
+
                   return _ChatBubble(
                     message: messageData['message'],
                     isOutgoing: messageData['senderId']==context.read<ChatsBloc>().userId,
-                    senderName: messageData['senderName']??"",
+                    senderName: messageData['userName']??"",
                     isDarkTheme: Theme
                         .of(context)
                         .brightness == Brightness.dark,
@@ -114,7 +113,10 @@ class _ChatBubble extends StatelessWidget {
         crossAxisAlignment:
         isOutgoing ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
-          if (!isOutgoing) Text(senderName, style: TextStyle(color: Colors.grey)),
+          if (!isOutgoing) Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(senderName, style: TextStyle(color: Colors.grey)),
+          ),
           Container(
             padding: EdgeInsets.all(12),
             margin: EdgeInsets.symmetric(vertical: 4),
@@ -151,6 +153,9 @@ class ChatInput extends StatelessWidget {
           children: [
             Expanded(
               child: TextField(
+                onChanged: (message){
+                  context.read<ChatsBloc>().add(TypingEvent());
+                },
                 controller: _textEditingController,
                 decoration: InputDecoration(
                   hintText: 'Message...',

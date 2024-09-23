@@ -13,6 +13,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
   ChatsBloc({required this.chatRepository,required this.userId,required this.userName,required this.userTargetId}) : super(ChatsInitial()) {
     on<ChatsLoadingEvent>(_loadChattingAsync);
     on<SendChatEvent>(_sendChattingAsync);
+    on<TypingEvent>(_typingEvent);
   }
 
   Future<void> _loadChattingAsync(
@@ -43,6 +44,19 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
         userUuid: userId,
         userName: userName,
         message: event.message,
+      );
+      emit(MessageSent());
+    } catch (e) {
+      emit(MessageSentFailed(e.toString()));
+    }
+  }
+  void _typingEvent(
+      TypingEvent event, Emitter<ChatsState> emit) async {
+    emit(SendingMessageLoading());
+    try {
+          await chatRepository.sendTypingMessage(
+          userTargetId: userTargetId,
+        userUuid: userId,
       );
       emit(MessageSent());
     } catch (e) {

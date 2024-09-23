@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
+import '../../const/const_strings.dart';
+
 class ChatRepository {
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
@@ -48,6 +50,26 @@ class ChatRepository {
         'receiverId': userTargetId,
         'message': message,
         'userName': userName,
+        'timestamp': FieldValue.serverTimestamp(), // Add timestamp for ordering
+      });
+    } catch (e) {
+      print("Error sending message: $e");
+    }
+  }
+  Future<void> sendTypingMessage(
+      {required String userUuid, required String userTargetId}) async {
+    final chatKey = [userUuid, userTargetId]..sort();
+    final uniqueChatKey = '${chatKey[0]}_${chatKey[1]}';
+
+    CollectionReference messages = FirebaseFirestore.instance.collection(
+        'chatMessages');
+
+    try {
+      await messages.doc(uniqueChatKey).collection('messages').add({
+        'senderId': userUuid,
+        'receiverId': userTargetId,
+        'message': typingMessageCode,
+        'userName': "",
         'timestamp': FieldValue.serverTimestamp(), // Add timestamp for ordering
       });
     } catch (e) {
