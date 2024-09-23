@@ -1,3 +1,4 @@
+import 'package:chat/extentions/time_extension.dart';
 import 'package:chat/repository/remote/auth_repository.dart';
 import 'package:chat/screens/users/bloc/users_list_event.dart';
 import 'package:chat/screens/users/bloc/users_list_state.dart';
@@ -61,7 +62,6 @@ class _UsersListState extends State<_UsersList> {
                         errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
                     ),
-                    if (user.isOnline)
                       Positioned(
                         bottom: 0,
                         right: 0,
@@ -69,7 +69,7 @@ class _UsersListState extends State<_UsersList> {
                           width: 12,
                           height: 12,
                           decoration: BoxDecoration(
-                            color: Colors.green,
+                            color:user.isOnline? Colors.green:Colors.grey,
                             shape: BoxShape.circle,
                             border: Border.all(color: Colors.white, width: 2),
                           ),
@@ -78,7 +78,7 @@ class _UsersListState extends State<_UsersList> {
                   ],
                 ),
                 title: Text(user.name, style: TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: Text(user.isOnline ? 'Online' : user.lastOnline),
+                subtitle: Text(user.isOnline ? 'Online' : user.lastOnline.toLastOnlineMessage()),
               );
             },
           );
