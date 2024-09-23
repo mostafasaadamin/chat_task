@@ -12,20 +12,37 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get/get.dart';
 
 import 'bloc/users_list_bloc.dart';
-
 class UsersListScreen extends StatelessWidget {
+  const UsersListScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocProvider(
+        create: (context) => UsersBloc(
+        authRepository:AuthRepository(),
+        chatRepository: ChatRepository()),
+        child: _Body());
+  }
+}
+
+
+
+class _Body extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return  Scaffold(
       appBar: AppBar(
+        actions: [Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: GestureDetector(
+              onTap: (){
+                context.read<UsersBloc>().add(LogoutEvent());
+              },
+              child: Icon(Icons.login)),
+        )],
         title: Text('Users List'),
       ),
-      body: BlocProvider(
-        create: (context) => UsersBloc(
-            authRepository:AuthRepository(),
-            chatRepository: ChatRepository()),
-        child: _UsersList(),
-      ),
+      body: _UsersList(),
     );
   }
 }

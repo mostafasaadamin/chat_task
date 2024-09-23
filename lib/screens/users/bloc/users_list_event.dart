@@ -10,3 +10,4 @@ abstract class UsersEvent extends Equatable {
 class LoadUsersEvent extends UsersEvent {}
 class SetUserAsOnlineEvent extends UsersEvent {}
 class GetUserIdEvent extends UsersEvent {}
+class LogoutEvent extends UsersEvent {}

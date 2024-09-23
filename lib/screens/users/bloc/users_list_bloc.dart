@@ -1,8 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:chat/repository/remote/chat_repository.dart';
+import 'package:chat/screens/login/login_screen.dart';
 import 'package:chat/screens/users/bloc/users_list_event.dart';
 import 'package:chat/screens/users/bloc/users_list_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import '../../../helper/shared_prefes.dart';
 import '../../../repository/remote/auth_repository.dart';
 
@@ -14,6 +16,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
   UsersBloc({required this.authRepository,required this.chatRepository}) : super(LoadUsersInitial()) {
     on<LoadUsersEvent>(_loadUsersGroupAsync);
     on<SetUserAsOnlineEvent>(_changeOnlineStatus);
+    on<LogoutEvent>(_logoutStatus);
     _initializeUserId();
 
   }
@@ -34,6 +37,11 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
     } catch (e) {
       emit(ChangeOnlineStatusError(e.toString()));
     }
+  }
+
+  void _logoutStatus(LogoutEvent event, Emitter<UsersState> emit) async {
+    await authRepository.signOut();
+    Get.offAll(LoginScreen());
   }
 
   void _initializeUserId() async {
