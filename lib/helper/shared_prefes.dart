@@ -31,6 +31,7 @@ class Preference {
 
 
   Future<void> clearAll() async {
+    _preferences = await SharedPreferences.getInstance();
     await _preferences.clear();
   }
 }

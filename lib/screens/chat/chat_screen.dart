@@ -75,6 +75,8 @@ class _ChatBody extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final messageData = messages[index].data() as Map<String,
                       dynamic>;
+                  print(messageData);
+                  print("userId${context.read<ChatsBloc>().userId}");
                   return _ChatBubble(
                     message: messageData['message'],
                     isOutgoing: messageData['senderId']==context.read<ChatsBloc>().userId,

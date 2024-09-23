@@ -24,7 +24,7 @@ class ChatRepository {
 
   Future<CollectionReference<Map<String, dynamic>>> loadAllChats(
       {required String userUuid, required String userTargetId}) async{
-    final chatKey = '${userUuid}_$userTargetId';
+    final chatKey = userTargetId;
     final messagesRef = _fireStore.collection('chatMessages')
         .doc(chatKey)
         .collection('messages');
@@ -34,7 +34,7 @@ class ChatRepository {
 
   Future<void> sendChatMessage(
       {required String userUuid, required String userTargetId, required String message, required String userName}) async {
-    String chatKey = '${userUuid}_$userTargetId';
+    String chatKey = userTargetId;
 
     CollectionReference messages = FirebaseFirestore.instance.collection(
         'chatMessages');

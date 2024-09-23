@@ -21,7 +21,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
     try {
 
       final chatsCollections =  await chatRepository.loadAllChats(
-      userUuid: userId,
+        userUuid: userId,
         userTargetId: userTargetId
       );
 
