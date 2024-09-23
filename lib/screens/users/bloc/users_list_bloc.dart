@@ -18,6 +18,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
     on<LoadUsersEvent>(_loadUsersGroupAsync);
     on<SetUserAsOnlineEvent>(_changeOnlineStatus);
     on<LogoutEvent>(_logoutStatus);
+    on<ChangeThemeEvent>(_changeTheme);
     _initializeUserId();
 
   }
@@ -46,6 +47,10 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
     await Preference.instance.clearAll();
     await authRepository.signOut();
     Get.offAll(LoginScreen());
+  }
+
+  void _changeTheme(ChangeThemeEvent event, Emitter<UsersState> emit) async {
+
   }
 
   void _initializeUserId() async {

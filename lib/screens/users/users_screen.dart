@@ -39,7 +39,17 @@ class _Body extends StatelessWidget {
                 context.read<UsersBloc>().add(LogoutEvent());
               },
               child: Icon(Icons.login)),
-        )],
+        ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: GestureDetector(
+                onTap: (){
+                  context.read<UsersBloc>().add(ChangeThemeEvent());
+                },
+                child: Icon(Icons.nightlight)),
+          )
+
+        ],
         title: Text('Users List'),
       ),
       body: _UsersList(),
