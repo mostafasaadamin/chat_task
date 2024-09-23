@@ -11,4 +11,3 @@ class LoadUsersEvent extends UsersEvent {}
 class SetUserAsOnlineEvent extends UsersEvent {}
 class GetUserIdEvent extends UsersEvent {}
 class LogoutEvent extends UsersEvent {}
-class ChangeThemeEvent extends UsersEvent {}

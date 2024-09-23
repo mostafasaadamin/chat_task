@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 import '../../../models/user.dart';
 
@@ -29,6 +30,12 @@ class UsersError extends UsersState {
   @override
   List<Object> get props => [message];
 }
+class ThemeState extends UsersState {
+  final ThemeMode  themeState;
+
+  const ThemeState(this.themeState);
+
+}
 
 class ChangeOnlineStatusError extends UsersState {
   final String message;
@@ -38,3 +45,5 @@ class ChangeOnlineStatusError extends UsersState {
   @override
   List<Object> get props => [message];
 }
+
+
