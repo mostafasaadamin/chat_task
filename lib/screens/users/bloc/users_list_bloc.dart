@@ -26,6 +26,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
     emit(UsersLoading());
     try {
      var users= await authRepository.loadAllUsersGroup();
+     users.removeWhere((element) => element.uuid==userId);
      emit(UsersLoaded(users));
     } catch (e) {
       emit(UsersError(e.toString()));
@@ -41,8 +42,8 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
   }
 
   void _logoutStatus(LogoutEvent event, Emitter<UsersState> emit) async {
-    await authRepository.signOut();
     await chatRepository.updateUserOnlineStatus(userId.toString(),false);
+    await authRepository.signOut();
     await Preference.instance.clearAll();
     Get.offAll(LoginScreen());
   }
